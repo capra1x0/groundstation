@@ -1,7 +1,7 @@
 import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
 import { API_URL } from "@/api/client";
-import type { Reading } from "@/types/telemetry";
+import type { Reading } from "@/types/reading";
 
 const readings = ref<Record<string, Reading>>({});
 const connected = ref(false);

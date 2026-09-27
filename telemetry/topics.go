@@ -5,15 +5,15 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 )
 
 type Topic struct {
 	Topic string `json:"topic"`
-	Source string `json:"source"`
 	Name string `json:"name"`
 	Description string `json:"description"`
+	SourceLabel string `json:"sourceLabel"`
 	Unit string `json:"unit"`
+	ValueType string `json:"valueType"`
 }
 
 var topics []Topic
@@ -27,13 +27,6 @@ func loadTopics(path string) {
 	err = json.Unmarshal(data, &topics)
 	if err != nil {
 		log.Fatalf("could not parse %s: %v", path, err)
-	}
-
-	for i := range topics {
-		parts := strings.Split(topics[i].Topic, "/")
-		if len(parts) == 3 {
-			topics[i].Source = parts[1]
-		}
 	}
 
 	log.Printf("loaded %d topics from %s", len(topics), path)

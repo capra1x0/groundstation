@@ -1,7 +1,6 @@
 export interface Reading {
-  source: string;
-  sensor: string;
+  topic: string;
   ts: number;
-  value: number;
+  value: number | boolean | string;
   unit: string;
 }

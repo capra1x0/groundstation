@@ -3,6 +3,8 @@
     "topic": "telemetry/sim/speed",
     "name": "Speed",
     "description": "Simulated drive cycle: accelerate, coast, brake, repeat",
-    "unit": "km/h"
+    "sourceLabel": "Simulation",
+    "unit": "km/h",
+    "valueType": "number"
   }
 ]
