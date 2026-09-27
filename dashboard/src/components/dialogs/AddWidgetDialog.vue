@@ -104,17 +104,18 @@
             class="flex snap-x gap-3 overflow-x-auto pb-2"
           >
             <button
-              v-for="option in displayOptions"
+              v-for="option in widgetOptions"
               :key="option.id"
               type="button"
               role="radio"
+              :disabled="!isAvailable(option)"
               :aria-checked="selectedDisplay === option.id"
-              class="flex aspect-11/10 w-44 shrink-0 snap-start flex-col rounded-lg border p-3 text-left transition-colors"
-              :class="selectedDisplay === option.id ? 'border-teal-400/70 bg-teal-400/10' : 'border-zinc-700 hover:bg-zinc-800/50'"
+              class="flex aspect-11/10 w-44 shrink-0 snap-start flex-col gap-2 rounded-lg border p-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              :class="selectedDisplay === option.id ? 'border-teal-400/70 bg-teal-400/10' : 'border-zinc-700 enabled:hover:bg-zinc-800/50'"
               @click="selectedDisplay = option.id"
             >
-              <span class="flex flex-1 items-center justify-center font-mono text-2xl text-zinc-100">
-                {{ option.preview }}
+              <span class="flex flex-1 items-center justify-center">
+                <img :src="option.preview" alt="" class="max-h-full" />
               </span>
               <span class="flex flex-col gap-0.5">
                 <span class="text-sm font-semibold text-zinc-100">{{ option.name }}</span>
@@ -176,16 +177,13 @@ import AppButton from "@/components/common/AppButton.vue"
 import AppDialog from "@/components/common/AppDialog.vue"
 import SourceBadge from "@/components/common/SourceBadge.vue"
 import type { Topic } from "@/types/topic"
+import { widgetOptions, type WidgetOption } from "@/config/widgets"
 
 const visible = defineModel<boolean>("visible", { required: true })
 
 const emit = defineEmits<{
   add: [widget: { topic: string, display: string, name: string, description: string }]
 }>()
-
-const displayOptions = [
-  { id: "big-number", name: "Big number", description: "Latest Value as a large number", preview: "42.0" },
-]
 
 const step = ref<1 | 2>(1)
 
@@ -217,6 +215,13 @@ async function loadTopics() {
   }
 }
 
+function isAvailable(option: WidgetOption): boolean {
+  if(!selectedTopic.value) {
+    return false
+  }
+  return option.valueTypes.includes(selectedTopic.value.valueType)
+}
+
 watch(visible, (open) => {
   if (open) {
     step.value = 1
@@ -230,7 +235,7 @@ function goToDisplay() {
     return
   }
 
-  selectedDisplay.value = displayOptions[0]?.id ?? null
+  selectedDisplay.value = widgetOptions.find(isAvailable)?.id ?? null
   widgetName.value = selectedTopic.value.name
   widgetDescription.value = ""
   step.value = 2
