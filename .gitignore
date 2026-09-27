@@ -1,0 +1,41 @@
+# --- Go ---
+# Binaries from "go build" (named after the folder)
+/sim/sim
+/telemetry/telemetry
+*.exe
+bin/
+
+# Test and coverage output
+*.test
+*.out
+coverage.*
+
+# --- Node / Vue (dashboard) ---
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# --- Environment files ---
+# May contain secrets later (DB passwords, tokens); share defaults via .env.example
+.env
+.env.*
+!.env.example
+
+# --- ESP32 firmware (PlatformIO, later) ---
+.pio/
+
+# --- Editors ---
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# --- OS ---
+.DS_Store
+Thumbs.db

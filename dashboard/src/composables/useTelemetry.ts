@@ -1,8 +1,7 @@
 import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
+import { API_URL } from "@/api/client";
 import type { Reading } from "@/types/telemetry";
-
-const EVENTS_URL = "http://localhost:1880/events";
 
 const readings = ref<Record<string, Reading>>({});
 const connected = ref(false);
@@ -13,7 +12,7 @@ function connect(): void {
     return;
   }
 
-  eventSource = new EventSource(EVENTS_URL);
+  eventSource = new EventSource(`${API_URL}/events`);
 
   eventSource.onopen = () => {
     connected.value = true;
@@ -25,7 +24,8 @@ function connect(): void {
 
   eventSource.onmessage = (event: MessageEvent<string>) => {
     const reading = JSON.parse(event.data) as Reading;
-    readings.value[`${reading.source}/${reading.sensor}`] = reading;
+
+    readings.value[`telemetry/${reading.source}/${reading.sensor}`] = reading;
   };
 }
 
