@@ -26,11 +26,11 @@ func main() {
 
 	if *temp {
 		go runTemp(client)
-		log.Println("start temp")
+		log.Println("start temp simulator")
 	}
 	if *speed {
 		go runSpeed(client)
-		log.Println("speed temp")
+		log.Println("start speed simulator")
 	}
 
 	stop := make(chan os.Signal, 1)
