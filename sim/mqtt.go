@@ -11,7 +11,7 @@ import (
 
 type reading struct {
 	Ts    int64   `json:"ts"`
-	Value float64 `json:"value"`
+	Value any `json:"value"`
 	Unit  string  `json:"unit"`
 }
 
@@ -42,7 +42,7 @@ func connect(broker string) mqtt.Client {
 	return client
 }
 
-func publish(client mqtt.Client, sensor string, value float64, unit string) {
+func publish(client mqtt.Client, sensor string, value any, unit string) {
 	if !client.IsConnectionOpen() {
 		return
 	}

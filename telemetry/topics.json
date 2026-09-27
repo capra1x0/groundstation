@@ -6,5 +6,13 @@
     "sourceLabel": "Simulation",
     "unit": "km/h",
     "valueType": "number"
+  },
+  {
+    "topic": "telemetry/sim/door",
+    "name": "Door",
+    "description": "Simulated door that opens and closes at random",
+    "sourceLabel": "Simulation",
+    "unit": "",
+    "valueType": "boolean"
   }
 ]
