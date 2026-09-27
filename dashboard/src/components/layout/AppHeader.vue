@@ -2,7 +2,7 @@
   <header class="flex items-center gap-4 border-b border-zinc-800 px-6 py-3">
     <RouterLink to="/" class="flex items-center gap-2 font-semibold">
       <span class="h-2.5 w-2.5 rotate-45 bg-teal-400"></span>
-      Groundstation
+      groundstation
     </RouterLink>
 
     <span class="flex items-center gap-2 rounded-md border border-zinc-800 px-2.5 py-1 font-mono text-xs text-zinc-400">
@@ -14,14 +14,20 @@
       {{ topics.length }} topics · 0 widgets
     </span>
 
-    <Button label="+ Add widget" size="small" />
+    <AppButton size="sm" @click="addWidgetOpen = true">+ Add widget</AppButton>
+
+    <AddWidgetDialog v-model:visible="addWidgetOpen" />
   </header>
 </template>
 
 <script setup lang="ts">
-import Button from "primevue/button"
+import { ref } from "vue"
 
+import AppButton from "@/components/common/AppButton.vue"
+import AddWidgetDialog from "@/components/dialogs/AddWidgetDialog.vue"
 import { useTelemetry } from "@/composables/useTelemetry"
 
 const { connected, topics } = useTelemetry()
+
+const addWidgetOpen = ref(false)
 </script>
