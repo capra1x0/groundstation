@@ -8,6 +8,14 @@
     "valueType": "number"
   },
   {
+    "topic": "telemetry/sim/temp",
+    "name": "Temperature",
+    "description": "Changing Temperature values",
+    "sourceLabel": "Simulation",
+    "unit": "°C",
+    "valueType": "number"
+  },
+  {
     "topic": "telemetry/sim/door",
     "name": "Door",
     "description": "Simulated door that opens and closes at random",

@@ -11,12 +11,12 @@
     </span>
 
     <span class="ml-auto font-mono text-xs text-zinc-500">
-      {{ topics.length }} topics · 0 widgets
+      {{ topics.length }} topics · {{ widgets.length }} widgets
     </span>
 
     <AppButton size="sm" @click="addWidgetOpen = true">+ Add widget</AppButton>
 
-    <AddWidgetDialog v-model:visible="addWidgetOpen" />
+    <AddWidgetDialog v-model:visible="addWidgetOpen" @add="addWidget" />
   </header>
 </template>
 
@@ -25,9 +25,11 @@ import { ref } from "vue"
 
 import AppButton from "@/components/common/AppButton.vue"
 import AddWidgetDialog from "@/components/dialogs/AddWidgetDialog.vue"
+import { useDashboard } from "@/composables/useDashboard"
 import { useTelemetry } from "@/composables/useTelemetry"
 
 const { connected, topics } = useTelemetry()
+const { widgets, addWidget } = useDashboard()
 
 const addWidgetOpen = ref(false)
 </script>

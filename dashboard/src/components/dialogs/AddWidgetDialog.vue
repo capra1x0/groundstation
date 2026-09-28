@@ -178,11 +178,12 @@ import AppDialog from "@/components/common/AppDialog.vue"
 import SourceBadge from "@/components/common/SourceBadge.vue"
 import type { Topic } from "@/types/topic"
 import { widgetOptions, type WidgetOption } from "@/config/widgets"
+import type { NewDashboardWidget } from "@/types/dashboardWidget"
 
 const visible = defineModel<boolean>("visible", { required: true })
 
 const emit = defineEmits<{
-  add: [widget: { topic: string, display: string, name: string, description: string }]
+  add: [widget: NewDashboardWidget]
 }>()
 
 const step = ref<1 | 2>(1)
@@ -247,8 +248,8 @@ function addWidget() {
   }
 
   emit("add", {
-    topic: selectedTopic.value.topic,
-    display: selectedDisplay.value,
+    widget: selectedDisplay.value,
+    topic: selectedTopic.value,
     name: widgetName.value.trim(),
     description: widgetDescription.value.trim(),
   })

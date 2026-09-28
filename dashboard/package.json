@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "date-fns": "^4.4.0",
     "tailwindcss": "^4.3.3",
+    "uuid": "^14.0.2",
     "vue": "^3.5.42",
     "vue-router": "^5.3.1"
   },

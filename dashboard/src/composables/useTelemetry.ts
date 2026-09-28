@@ -25,7 +25,7 @@ function connect(): void {
   eventSource.onmessage = (event: MessageEvent<string>) => {
     const reading = JSON.parse(event.data) as Reading;
 
-    readings.value[`telemetry/${reading.source}/${reading.sensor}`] = reading;
+    readings.value[reading.topic] = reading
   };
 }
 
