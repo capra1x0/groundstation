@@ -2,7 +2,20 @@
   <WidgetCard :widget="widget" class="col-span-2">
     <div class="flex flex-col gap-3">
       <div class="flex items-baseline gap-2">
-        <span class="text-3xl font-semibold tabular-nums text-zinc-100">{{ displayValue }}</span>
+        <div class="flex h-9 items-center gap-2">
+          <span
+            v-if="isBoolean"
+            class="h-4 w-4 rounded-full"
+            :class="dotClasses"
+            role="img"
+            :aria-label="booleanState === null ? 'no data' : String(booleanState)"
+          ></span>
+
+          <template v-else>
+            <span class="text-3xl font-semibold tabular-nums text-zinc-100">{{ displayValue }}</span>
+            <span class="self-end pb-1 text-sm text-zinc-400">{{ widget.topic.unit }}</span>
+          </template>
+        </div>
         <span class="text-sm text-zinc-400">{{ widget.topic.unit }}</span>
       </div>
 
@@ -41,8 +54,8 @@
         </svg>
 
         <template v-if="points.length > 1">
-          <span class="absolute left-2 top-1 font-mono text-xs text-zinc-500">{{ formatValue(range.max) }}</span>
-          <span class="absolute bottom-1 left-2 font-mono text-xs text-zinc-500">{{ formatValue(range.min) }}</span>
+          <span class="absolute left-2 top-1 font-mono text-xs text-zinc-500">{{ formatAxis(range.max) }}</span>
+          <span class="absolute bottom-1 left-2 font-mono text-xs text-zinc-500">{{ formatAxis(range.min) }}</span>
         </template>
         <p v-else class="absolute inset-0 flex items-center justify-center text-sm text-zinc-500">Waiting for data</p>
       </div>
@@ -85,6 +98,9 @@ const props = defineProps<{
 
 const { updateSettings } = useDashboard()
 const reading = useReading(() => props.widget.topic.topic)
+
+const isBoolean = computed(() => props.widget.topic.valueType === "boolean")
+const booleanState = computed(() => (typeof reading.value?.value === "boolean" ? reading.value.value : null))
 
 const now = ref(Date.now())
 let timer: number | undefined
@@ -152,13 +168,34 @@ const points = computed(() => {
 
   const visible: Point[] = []
   for (const entry of history.slice(Math.max(firstVisible - 1, 0))) {
-    if (typeof entry.value === "number") {
-      visible.push({ ts: entry.ts, value: entry.value })
+    const value = toNumber(entry.value)
+    if (value !== null) {
+      visible.push({ ts: entry.ts, value })
     }
   }
 
   return downsample(visible)
 })
+
+const dotClasses = computed(() => {
+  if (booleanState.value === null) {
+    return "bg-zinc-600"
+  }
+  if (booleanState.value) {
+    return "bg-green-400 shadow-[0_0_10px_2px_var(--color-green-400)]"
+  }
+  return "bg-red-500 shadow-[0_0_10px_2px_var(--color-red-500)]"
+})
+
+function toNumber(value: number | boolean | string): number | null {
+  if (typeof value === "number") {
+    return value
+  }
+  if (typeof value === "boolean") {
+    return value ? 1 : 0
+  }
+  return null
+}
 
 function downsample(input: Point[]): Point[] {
   if (input.length <= WIDTH * 2) {
@@ -196,6 +233,10 @@ function lowestAndHighest(column: Point[]): Point[] {
 }
 
 const range = computed(() => {
+  if (isBoolean.value) {
+    return { min: 0, max: 1 }
+  }
+
   let min = Infinity
   let max = -Infinity
 
@@ -221,11 +262,23 @@ function toY(value: number): number {
   return HEIGHT - PADDING - fraction * (HEIGHT - PADDING * 2)
 }
 
-const linePath = computed(() =>
-  points.value
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${toX(point.ts).toFixed(1)} ${toY(point.value).toFixed(1)}`)
-    .join(" "),
-)
+const linePath = computed(() => {
+  const segments = points.value.map((point, index) => {
+    const x = toX(point.ts).toFixed(1)
+    const y = toY(point.value).toFixed(1)
+
+    if (index === 0) {
+      return `M ${x} ${y}`
+    }
+    return isBoolean.value ? `H ${x} V ${y}` : `L ${x} ${y}`
+  })
+
+  if (isBoolean.value && segments.length > 0) {
+    segments.push(`H ${WIDTH}`)
+  }
+
+  return segments.join(" ")
+})
 
 const areaPath = computed(() => {
   const first = points.value[0]
@@ -233,16 +286,27 @@ const areaPath = computed(() => {
   if (!first || !last) {
     return ""
   }
-  return `${linePath.value} L ${toX(last.ts).toFixed(1)} ${HEIGHT} L ${toX(first.ts).toFixed(1)} ${HEIGHT} Z`
+  const endX = isBoolean.value ? WIDTH : toX(last.ts)
+  return `${linePath.value} L ${endX.toFixed(1)} ${HEIGHT} L ${toX(first.ts).toFixed(1)} ${HEIGHT} Z`
 })
 
 const displayValue = computed(() => {
   const value = reading.value?.value
+  if (typeof value === "boolean") {
+    return String(value)
+  }
   return typeof value === "number" ? formatValue(value) : "–"
 })
 
 function formatValue(value: number): string {
   return value.toLocaleString(undefined, { maximumFractionDigits: 1 })
+}
+
+function formatAxis(value: number): string {
+  if (isBoolean.value) {
+    return value === 1 ? "true" : "false"
+  }
+  return formatValue(value)
 }
 
 function formatDuration(seconds: number): string {

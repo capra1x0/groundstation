@@ -28,6 +28,6 @@ export const widgetOptions: WidgetOption[] = [
     name: "Line chart",
     description: "Value over time",
     preview: "/previews/line-chart.svg",
-    valueTypes: ["number"],
+    valueTypes: ["number", "boolean"],
   },
 ]
