@@ -23,4 +23,11 @@ export const widgetOptions: WidgetOption[] = [
     preview: "/previews/gauge.svg",
     valueTypes: ["number"],
   },
+  {
+    id: "line-chart",
+    name: "Line chart",
+    description: "Value over time",
+    preview: "/previews/line-chart.svg",
+    valueTypes: ["number"],
+  },
 ]

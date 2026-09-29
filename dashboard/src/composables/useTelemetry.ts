@@ -6,25 +6,28 @@ import type { Reading } from "@/types/reading";
 const HISTORY_DURATION_MS = 5 * 60 * 1000;
 
 const readings = ref<Record<string, Reading>>({});
-const history = ref<Record<string, Reading[]>>({});
 const connected = ref(false);
 let eventSource: EventSource | null = null;
+
+const history = new Map<string, Reading[]>();
 
 function storeReading(reading: Reading): void {
   readings.value[reading.topic] = reading;
 
-  const list = history.value[reading.topic] ?? [];
+  let list = history.get(reading.topic);
+  if(!list) {
+    list = [];
+    history.set(reading.topic, list);
+  }
   list.push(reading);
 
   const cutoff = Date.now() - HISTORY_DURATION_MS;
   const firstRecent = list.findIndex((entry) => entry.ts >= cutoff);
   const tooOld = firstRecent === -1 ? list.length : firstRecent;
-
+ 
   if (tooOld > 0) {
     list.splice(0, tooOld);
   }
-
-  history.value[reading.topic] = list;
 }
 
 function connect(): void {
@@ -53,7 +56,7 @@ export function useTelemetry() {
 
   const topics = computed(() => Object.keys(readings.value).sort());
 
-  return { readings, history, connected, topics };
+  return { readings, connected, topics };
 }
 
 export function useReading(topic: MaybeRefOrGetter<string>) {
@@ -62,8 +65,8 @@ export function useReading(topic: MaybeRefOrGetter<string>) {
   return computed<Reading | undefined>(() => readings.value[toValue(topic)]);
 }
 
-export function useHistory(topic: MaybeRefOrGetter<string>) {
-  const { history } = useTelemetry();
+export function getHistory(topic: string): Reading[] {
+  connect();
 
-  return computed<Reading[]>(() => history.value[toValue(topic)] ?? []);
+  return history.get(topic) ?? [];
 }

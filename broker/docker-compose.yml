@@ -2,15 +2,13 @@ services:
   mosquitto:
     image: "eclipse-mosquitto:2"
     container_name: "mosquitto"
-    # Don't auto-start with Docker - only runs when you start it yourself
     restart: "no"
     ports:
-      - "1883:1883" # MQTT (ESP32s, Go sim, Go telemetry service)
-      - "9001:9001" # MQTT over WebSockets (browser clients, e.g. a Vue dashboard later)
+      - "1883:1883"
+      - "9001:9001"
     volumes:
       - "./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro"
       - "mosquitto-data:/mosquitto/data"
 
 volumes:
-  # Named volume: survives "docker compose down", avoids file permission issues on bind mounts
   mosquitto-data:
