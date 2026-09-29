@@ -9,6 +9,7 @@ var hub = newHub()
 
 func main() {
 	loadTopics("topics.json")
+	connectDatabase()
 	connectMQTT()
 
 	http.HandleFunc("/events", handleEvents)

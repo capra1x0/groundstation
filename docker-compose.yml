@@ -14,7 +14,7 @@ services:
     container_name: "timescaledb"
     restart: "no"
     ports:
-      - "4321:4321"
+      - "4321:5432"
     environment:
       POSTGRES_USER: "${POSTGRES_USER:?set POSTGRES_USER in .env}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}"

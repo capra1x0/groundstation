@@ -48,4 +48,5 @@ func onMessage(_ mqtt.Client, msg mqtt.Message) {
 	reading.Topic = msg.Topic()
 
 	hub.broadcase(reading)
+	store(reading)
 }
