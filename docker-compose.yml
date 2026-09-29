@@ -1,0 +1,28 @@
+services:
+  mosquitto:
+    image: "eclipse-mosquitto:2"
+    container_name: "mosquitto"
+    restart: "no"
+    ports:
+      - "1883:1883"
+    volumes:
+      - "./broker/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro"
+      - "mosquitto-data:/mosquitto/data"
+
+  timescaledb:
+    image: "timescale/timescaledb:latest-pg17"
+    container_name: "timescaledb"
+    restart: "no"
+    ports:
+      - "4321:4321"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:?set POSTGRES_USER in .env}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}"
+      POSTGRES_DB: "${POSTGRES_DB:?set POSTGRES_DB in .env}"
+    volumes:
+      - "./database/schema.sql:/docker-entrypoint-initdb.d/100_schema.sql:ro"
+      - "timescale-data:/var/lib/postgresql/data"
+
+volumes:
+  mosquitto-data:
+  timescale-data:
