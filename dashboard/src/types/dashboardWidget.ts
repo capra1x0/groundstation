@@ -6,6 +6,7 @@ export interface DashboardWidget {
   topic: Topic;
   name: string;
   description: string;
+  settings: Record<string, number>;
 }
 
-export type NewDashboardWidget = Omit<DashboardWidget, "id">;
+export type NewDashboardWidget = Omit<DashboardWidget, "id" | "settings">;

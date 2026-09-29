@@ -18,10 +18,10 @@ type phase struct {
 }
 
 var driveCycle = []phase {
-	{ target: 100, rate: 16 },
-	{ target: 60, rate: 10 },
-	{ target: 100, rate: 12 },
-	{ target: 0, rate: 20 },
+	{ target: 100, rate: 32 },
+	{ target: 60, rate: 20 },
+	{ target: 100, rate: 24 },
+	{ target: 0, rate: 40 },
 }
 
 func runSpeed(client mqtt.Client) {

@@ -16,4 +16,11 @@ export const widgetOptions: WidgetOption[] = [
     preview: "/previews/big-number.svg",
     valueTypes: ["number"],
   },
+  {
+    id: "gauge",
+    name: "Gauge",
+    description: "Current value within a range",
+    preview: "/previews/gauge.svg",
+    valueTypes: ["number"],
+  },
 ]
