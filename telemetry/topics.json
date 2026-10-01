@@ -38,5 +38,13 @@
     "sourceLabel": "ESP32",
     "unit": "%",
     "valueType": "number"
+  },
+  {
+    "topic": "telemetry/esp/potentiometer",
+    "name": "ESP Potentiometer",
+    "description": "B10K on the ESP32",
+    "sourceLabel": "ESP32",
+    "unit": "%",
+    "valueType": "number"
   }
 ]
