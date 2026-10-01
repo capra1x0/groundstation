@@ -3,8 +3,6 @@
 #include "freertos/projdefs.h"
 #include "freertos/task.h"
 #include "mqtt.h"
-#include "nvs.h"
-#include "nvs_flash.h"
 #include "wifi.h"
 #include "dht.h"
 #include "esp_log.h"
@@ -14,13 +12,6 @@
 static const char *TAG = "climate";
 
 void app_main(void) {
-    esp_err_t err = nvs_flash_init();
-    if(err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        err = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(err);
-
     wifi_connect();
     mqtt_start();
 
@@ -37,6 +28,6 @@ void app_main(void) {
             ESP_LOGW(TAG, "reading failed: %s", esp_err_to_name(result));
         }
 
-        vTaskDelay(pdMS_TO_TICKS(10000));
+        vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }

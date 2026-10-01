@@ -29,10 +29,10 @@ pnpm-debug.log*
 
 # --- ESP32 firmware (PlatformIO, later) ---
 .pio/
-firmware/*/build/
-firmware/*/sdkconfig
-firmware/*/sdkconfig.old
-firmware/*/managed_components/
+firmware/**/build/
+firmware/**/sdkconfig
+firmware/**/sdkconfig.old
+firmware/**/managed_components/
 
 # --- Editors ---
 .idea/
@@ -40,6 +40,7 @@ firmware/*/managed_components/
 !.vscode/extensions.json
 *.swp
 .cache/
+.clangd
 
 # --- OS ---
 .DS_Store

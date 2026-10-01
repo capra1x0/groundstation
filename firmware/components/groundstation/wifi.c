@@ -14,6 +14,8 @@
 #include "esp_wifi_types_generic.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
+#include "nvs.h"
+#include "nvs_flash.h"
 
 #define WIFI_CONNECTED_BIT BIT0
 
@@ -34,7 +36,18 @@ static void on_wifi_event(void *args, esp_event_base_t base, int32_t id, void *d
     }
 }
 
+static void init_nvs(void) {
+    esp_err_t err = nvs_flash_init();
+    if(err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        err = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(err);
+}
+
 void wifi_connect(void) {
+    init_nvs();
+
     wifi_events = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
