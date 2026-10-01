@@ -3,11 +3,18 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/joho/godotenv"
 )
 
 var hub = newHub()
 
 func main() {
+	err := godotenv.Load("../.env")		
+	if err != nil {
+		log.Println("no ../.env found")
+	}
+
 	loadTopics("topics.json")
 	connectDatabase()
 	connectMQTT()
