@@ -22,5 +22,21 @@
     "sourceLabel": "Simulation",
     "unit": "",
     "valueType": "boolean"
+  },
+  {
+    "topic": "telemetry/esp/temp",
+    "name": "ESP Temperature",
+    "description": "DHT11 on the ESP32",
+    "sourceLabel": "ESP32",
+    "unit": "°C",
+    "valueType": "number"
+  },
+  {
+    "topic": "telemetry/esp/humidity",
+    "name": "ESP Humidity",
+    "description": "DHT11 on the ESP32",
+    "sourceLabel": "ESP32",
+    "unit": "%",
+    "valueType": "number"
   }
 ]

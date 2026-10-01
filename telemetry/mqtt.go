@@ -46,6 +46,9 @@ func onMessage(_ mqtt.Client, msg mqtt.Message) {
 	}
 
 	reading.Topic = msg.Topic()
+	if reading.TS == 0 {
+		reading.TS = time.Now().UnixMilli()
+	}
 
 	hub.broadcase(reading)
 	store(reading)

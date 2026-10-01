@@ -16,7 +16,6 @@
             <span class="self-end pb-1 text-sm text-zinc-400">{{ widget.topic.unit }}</span>
           </template>
         </div>
-        <span class="text-sm text-zinc-400">{{ widget.topic.unit }}</span>
       </div>
 
       <div
