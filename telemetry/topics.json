@@ -46,5 +46,13 @@
     "sourceLabel": "ESP32",
     "unit": "%",
     "valueType": "number"
+  },
+  {
+    "topic": "telemetry/esp/distance",
+    "name": "Distance",
+    "description": "HC-SR04 ultrasonic sensor",
+    "sourceLabel": "ESP32",
+    "unit": "cm",
+    "valueType": "number"
   }
 ]
