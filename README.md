@@ -18,46 +18,11 @@ I built this to get more familiar with Go and combine it with my interests in em
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph devices["Data sources"]
-        dht["ESP32 · DHT11"]
-        pot["ESP32 · Potentiometer"]
-        hc["ESP32 · HC-SR04"]
-        sim["Go simulator"]
-    end
-
-    broker[("Mosquitto<br/>MQTT broker")]
-    backend["Go telemetry service"]
-    db[("TimescaleDB")]
-    ui["Vue dashboard"]
-
-    devices -->|"MQTT"| broker
-    broker --> backend
-    backend -->|"batched writes"| db
-    backend -->|"live stream (SSE)"| ui
-    ui -->|"topics, history"| backend
-```
+<img src="docs/images/architecture.png" alt="Architecture" width="800">
 
 ### Life of a reading
 
-```mermaid
-sequenceDiagram
-    participant D as ESP32 / Simulator
-    participant B as Mosquitto
-    participant G as Go backend
-    participant DB as TimescaleDB
-    participant UI as Dashboard
-
-    D->>B: publish to telemetry/esp/distance
-    B->>G: deliver message
-    G-->>UI: live event, instantly
-    G->>DB: batched write, every second
-    Note over UI: chart created later
-    UI->>G: GET /history
-    G->>DB: query last 5 minutes
-    G-->>UI: stored readings
-```
+<img src="docs/images/reading-flow.png" alt="Reading flow" width="800">
 
 ## Design decisions
 
