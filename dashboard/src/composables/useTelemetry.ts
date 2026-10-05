@@ -2,6 +2,7 @@ import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
 import { API_URL } from "@/api/client";
 import type { Reading } from "@/types/reading";
+import { fetchHistory } from "@/api/history";
 
 const HISTORY_DURATION_MS = 5 * 60 * 1000;
 
@@ -10,6 +11,16 @@ const connected = ref(false);
 let eventSource: EventSource | null = null;
 
 const history = new Map<string, Reading[]>();
+
+function removeOld(list: Reading[]): void {
+  const cutoff = Date.now() - HISTORY_DURATION_MS;
+  const firstRecent = list.findIndex((e) => e.ts >= cutoff);;
+  const tooOld = firstRecent == -1 ? list.length : firstRecent;
+
+  if(tooOld > 0) {
+    list.splice(0, tooOld);
+  }
+}
 
 function storeReading(reading: Reading): void {
   readings.value[reading.topic] = reading;
@@ -20,14 +31,7 @@ function storeReading(reading: Reading): void {
     history.set(reading.topic, list);
   }
   list.push(reading);
-
-  const cutoff = Date.now() - HISTORY_DURATION_MS;
-  const firstRecent = list.findIndex((entry) => entry.ts >= cutoff);
-  const tooOld = firstRecent === -1 ? list.length : firstRecent;
- 
-  if (tooOld > 0) {
-    list.splice(0, tooOld);
-  }
+  removeOld(list);
 }
 
 function connect(): void {
@@ -69,4 +73,11 @@ export function getHistory(topic: string): Reading[] {
   connect();
 
   return history.get(topic) ?? [];
+}
+
+export async function loadHistory(topic: string): Promise<void> {
+  const stored = await fetchHistory(topic);
+
+  removeOld(stored);
+  history.set(topic, stored);
 }

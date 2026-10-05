@@ -73,7 +73,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue"
 
 import WidgetCard from "@/components/widgets/WidgetCard.vue"
 import { useDashboard } from "@/composables/useDashboard"
-import { getHistory, useReading } from "@/composables/useTelemetry"
+import { getHistory, useReading, loadHistory } from "@/composables/useTelemetry"
 import type { DashboardWidget } from "@/types/dashboardWidget"
 
 interface Point {
@@ -105,6 +105,10 @@ const now = ref(Date.now())
 let timer: number | undefined
 
 onMounted(() => {
+  loadHistory(props.widget.topic.topic).catch((err) => {
+    console.warn("could not load history", err);
+  })
+
   timer = window.setInterval(() => {
     now.value = Date.now()
   }, 200)
