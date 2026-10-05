@@ -21,6 +21,7 @@ func main() {
 
 	http.HandleFunc("/events", handleEvents)
 	http.HandleFunc("/topics", handleTopics)
+	http.HandleFunc("/history", handleHistory)
 
 	log.Println("listening on http://localhost:1880/events")
 	log.Fatal(http.ListenAndServe(":1880", nil))
