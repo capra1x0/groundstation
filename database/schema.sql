@@ -11,3 +11,7 @@ CREATE TABLE readings (
 SELECT create_hypertable('readings', by_range('ts'));
 
 CREATE INDEX readings_topic_ts_idx ON readings (topic, ts DESC);
+
+SELECT set_chunk_time_interval('readings', INTERVAL '1 day');
+
+SELECT add_retention_policy('readings', INTERVAL '7 days');
