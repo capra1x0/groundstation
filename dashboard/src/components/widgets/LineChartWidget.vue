@@ -173,7 +173,7 @@ const points = computed(() => {
     }
   }
 
-  return downsample(visible)
+  return visible
 })
 
 const dotClasses = computed(() => {
@@ -194,41 +194,6 @@ function toNumber(value: number | boolean | string): number | null {
     return value ? 1 : 0
   }
   return null
-}
-
-function downsample(input: Point[]): Point[] {
-  if (input.length <= WIDTH * 2) {
-    return input
-  }
-
-  const columnMs = (windowSeconds.value * 1000) / WIDTH
-  const result: Point[] = []
-  let column: Point[] = []
-  let columnIndex: number | null = null
-
-  for (const point of input) {
-    const index = Math.floor((point.ts - start.value) / columnMs)
-    if (index !== columnIndex) {
-      result.push(...lowestAndHighest(column))
-      column = []
-      columnIndex = index
-    }
-    column.push(point)
-  }
-  result.push(...lowestAndHighest(column))
-
-  return result
-}
-
-function lowestAndHighest(column: Point[]): Point[] {
-  if (column.length <= 2) {
-    return column
-  }
-
-  const lowest = column.reduce((low, point) => (point.value < low.value ? point : low))
-  const highest = column.reduce((high, point) => (point.value > high.value ? point : high))
-
-  return lowest.ts <= highest.ts ? [lowest, highest] : [highest, lowest]
 }
 
 const range = computed(() => {
